@@ -1,0 +1,10 @@
+{
+    "name": "Replacer",
+    "version": "1.0.0",
+    "author": "Sanjeev Krishna",
+    "uuid": "1e05bc86-d2a1-40e9-8dca-2fcc6ad6b315",
+    "tags": [
+        "Migration",
+        "ConfigGenerator"
+    ]
+}

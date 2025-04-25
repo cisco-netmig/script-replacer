@@ -1,0 +1,10 @@
+!
+hosntame $Hostname$
+!
+vlan 10
+ name $VlanName$
+!
+interface Eth1/1
+ ip address $IpAddress$
+ no shutdown
+!
