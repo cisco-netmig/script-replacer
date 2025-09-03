@@ -32,3 +32,6 @@
 
 ## Tags
 `#ConfigurationAutomation` `#FindAndReplace` `#PreMigration` `#TemplateProcessing`
+
+## Screenshots
+![Project Logo](./SCREENSHOT.png)
