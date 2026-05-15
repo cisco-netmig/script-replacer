@@ -1,4 +1,6 @@
 import logging
+logger = logging.getLogger(__name__)
+
 import os
 from datetime import datetime
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -250,7 +252,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         self.replace_button.clicked.connect(self.build_output_event)
         self.output_button.clicked.connect(lambda: self.open_path(self.output_report))
 
-        logging.debug("Form initialized with output_dir: %s", self.output_dir)
+        logger.debug("Form initialized with output_dir: %s", self.output_dir)
 
     def select_template_event(self):
         """
@@ -259,15 +261,15 @@ class Form(QtWidgets.QWidget, Ui_Form):
         file_path = QtWidgets.QFileDialog().getOpenFileName(filter='(*.txt *.cfg)')[0]
         if file_path:
             self.data['template_file'] = file_path
-            logging.info(f'"{file_path}" selected!')
-            logging.info('Now click "Fill Variables" and fill up the values')
+            logger.info(f'"{file_path}" selected!')
+            logger.info('Now click "Fill Variables" and fill up the values')
 
     def fill_values_event(self):
         """
         Start the worker thread to extract variables from the selected template.
         """
         if 'template_file' not in self.data:
-            logging.info('No template selected')
+            logger.info('No template selected')
             return
 
         self.fill_thread = FillValuesWorker(self.data['template_file'])
@@ -291,7 +293,7 @@ class Form(QtWidgets.QWidget, Ui_Form):
         Start the output generation process by replacing variables in the template.
         """
         if 'variable_file_path' not in self.data or 'config_template' not in self.data:
-            logging.info('Missing template or variable file')
+            logger.info('Missing template or variable file')
             return
 
         os.makedirs(self.output_dir, exist_ok=True)
@@ -323,9 +325,9 @@ class Form(QtWidgets.QWidget, Ui_Form):
         """
         try:
             if path and os.path.exists(path):
-                logging.info(f"Opening path: {path}")
+                logger.info(f"Opening path: {path}")
                 QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(path))
             else:
-                logging.error(f"Invalid or non-existent path: {path}")
+                logger.error(f"Invalid or non-existent path: {path}")
         except Exception as e:
-            logging.exception(f"Failed to open path: {e}")
+            logger.exception(f"Failed to open path: {e}")

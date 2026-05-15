@@ -1,7 +1,9 @@
+import logging
+logger = logging.getLogger(__name__)
+
 import os
 import re
 import traceback
-import logging
 from tempfile import NamedTemporaryFile
 
 from PyQt5 import QtWidgets, QtCore
@@ -33,17 +35,17 @@ class FillValuesWorker(QtCore.QThread):
         creates an Excel form, and emits a signal upon completion.
         """
         if not self.template_file:
-            logging.info('Template file cannot be empty')
+            logger.info('Template file cannot be empty')
             return
 
-        logging.info('Building variable form')
+        logger.info('Building variable form')
 
         self.config_template, self.var_list = self.get_template_vars(self.template_file)
         variable_file_path = self.create_excel_form(self.var_list)
 
-        logging.info('Opening variable form')
-        logging.info('Fill up the values against variables and save')
-        logging.info('Once values are filled click "Replace"')
+        logger.info('Opening variable form')
+        logger.info('Fill up the values against variables and save')
+        logger.info('Once values are filled click "Replace"')
 
         self.fill_complete.emit({
             'config_template': self.config_template,
@@ -123,12 +125,12 @@ class BuildOutputWorker(QtCore.QThread):
         the Excel form and writes the result to an output Excel file.
         """
         if not self.variable_file_path:
-            logging.info('Variable form cannot be empty')
+            logger.info('Variable form cannot be empty')
             return
 
         from netcore import XLBW, XLR
 
-        logging.info('Building output')
+        logger.info('Building output')
 
         workbook_form = XLR(self.variable_file_path).book
         worksheet_form = workbook_form.sheet_by_index(0)
@@ -146,18 +148,18 @@ class BuildOutputWorker(QtCore.QThread):
             cfg.extend(self.sub_get_string(self.template, repl_dict, ftb, fthl, fte))
             self.write_rich_table(worksheet, cfg, ftb, fthl, fte, 0, col_idx - 1, 95)
 
-            if hasattr(logging, 'savings'):
-                logging.savings(10)
+            if hasattr(logger, 'savings'):
+                logger.savings(10)
 
         workbook.close()
 
         try:
             os.remove(self.variable_file_path)
-            logging.info('Variable form removed successfully')
+            logger.info('Variable form removed successfully')
         except Exception:
-            logging.error(traceback.format_exc())
+            logger.error(traceback.format_exc())
 
-        logging.info('Variables Replaced!')
+        logger.info('Variables Replaced!')
 
     def write_rich_table(self, ws, cfg_lines, ftb, fthl, fte, row_index, col_index, col_width):
         """
